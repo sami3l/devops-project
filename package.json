@@ -1,0 +1,13 @@
+{
+    "name": "devops-app",
+    "version": "1.0.0",
+    "description": "My first devops project",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}
