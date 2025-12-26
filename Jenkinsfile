@@ -3,6 +3,8 @@ pipeline {
 
     // We keep this to ensure the tool is installed
     tools {
+        // This tells Jenkins to use the scanner tool we set up in the "Global Tools"
+        // Make sure the name 'sonar-scanner' matches what you typed in the settings!
         'hudson.plugins.sonar.SonarRunnerInstallation' 'sonar-scanner'
     }
 
