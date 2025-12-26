@@ -1,26 +1,29 @@
 pipeline {
     agent any
 
+    // We keep this to ensure the tool is installed
     tools {
-        // This tells Jenkins to use the scanner tool we set up in the "Global Tools"
-        // Make sure the name 'sonar-scanner' matches what you typed in the settings!
-        'org.jenkinsci.plugins.sonar.SonarRunnerInstallation' 'sonar-scanner'
+        'hudson.plugins.sonar.SonarRunnerInstallation' 'sonar-scanner'
     }
 
     stages {
         stage('Code Checkout') {
             steps {
-                // Just a debug message to confirm we started
-                echo 'Checking out code from GitHub...'
+                checkout scm
             }
         }
 
         stage('Static Code Analysis') {
             steps {
-                echo 'Running SonarQube Scanner...'
-                // This connects to the 'sonar-server' we configured in System Settings
-                withSonarQubeEnv('sonar-server') {
-                    sh 'sonar-scanner'
+                script {
+                    // TEACHER NOTE: This command asks Jenkins "Where did you install the tool named 'sonar-scanner'?"
+                    // It saves the path into the variable 'scannerHome'
+                    def scannerHome = tool 'sonar-scanner'
+                    
+                    // Now we run the command using the FULL PATH so there is no confusion
+                    withSonarQubeEnv('sonar-server') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
@@ -28,7 +31,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker Image...'
-                // This uses the "Docker inside Docker" trick we set up
                 sh 'docker build -t my-node-app:v1 .'
             }
         }
